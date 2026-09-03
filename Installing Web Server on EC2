@@ -1,43 +1,61 @@
 # Installing Web Server on EC2
 
+## Simple Step-by-Step Guide
+
+Follow these steps in order. Run one command at a time.
+
 ---
 
-## Installing Web Server on EC2
+## Step 1 — Launch an Ubuntu EC2 Instance
+
+Create an Ubuntu EC2 instance from the AWS Console.
+
+In the Security Group, allow:
+
+- SSH — Port 22
+- HTTP — Port 80
 
 ---
 
-### 1. Start an EC2 Instance
+## Step 2 — Connect to the EC2 Server
 
-* Launch an Ubuntu EC2 instance.
+Connect to the instance using SSH or EC2 Instance Connect.
 
-* In the Security Group, allow:
+---
 
-  * SSH — Port 22
-  * HTTP — Port 80
+## Step 3 — Switch to Root User
 
-### 2. Connect to the EC2 Server
-
-Connect to the EC2 instance using SSH.
-
-### 3. Take Control
+Run:
 
 ```bash
 sudo -i
 ```
 
-### 4. Update the Server
+---
+
+## Step 4 — Update the Server
+
+Run:
 
 ```bash
 apt update -y
 ```
 
-### 5. Install Apache Web Server
+---
+
+## Step 5 — Install Apache Web Server
+
+Run:
 
 ```bash
 apt install apache2 -y
 ```
 
-### 6. Edit `index.html`
+---
+
+## Step 6 — Edit the Website Home Page
+
+Open the Apache `index.html` file:
 
 ```bash
 nano /var/www/html/index.html
@@ -50,25 +68,39 @@ Example content:
 <p>Apache Web Server is running on AWS EC2.</p>
 ```
 
-Save:
+Save the file using:
 
-* `Ctrl + O`
-* Enter
-* `Ctrl + X`
+```text
+Ctrl + O
+Enter
+Ctrl + X
+```
 
-### 7. Start Apache Web Server
+---
+
+## Step 7 — Start Apache
+
+Run:
 
 ```bash
 systemctl start apache2
 ```
 
-Enable Apache to start automatically after reboot:
+---
+
+## Step 8 — Enable Apache After Reboot
+
+Run:
 
 ```bash
 systemctl enable apache2
 ```
 
-### 8. Verify Apache Service
+---
+
+## Step 9 — Check Apache Status
+
+Run:
 
 ```bash
 systemctl status apache2
@@ -82,32 +114,32 @@ active (running)
 
 Apache is running successfully.
 
-### 9. Verify in Browser
+---
 
-Copy the **Public IPv4 address** of the EC2 instance.
+## Step 10 — Open the Website in a Browser
 
-Open in browser:
+Copy the **Public IPv4 address** of your EC2 instance.
+
+Open this in your browser:
 
 ```text
 http://EC2-PUBLIC-IP
 ```
 
-The custom `index.html` page should appear.
+Your custom `index.html` page should appear.
 
-### Important
+---
 
-Make sure **HTTP (Port 80)** is allowed in the EC2 Security Group.
+## Important
 
-Do not use:
+Make sure **HTTP Port 80** is allowed in the EC2 Security Group.
 
-```bash
-apt get update
-```
-
-Correct command:
+Use:
 
 ```bash
 apt update
 ```
 
-For current Ubuntu systems, `systemctl` is preferred over the older `service` command.
+For current Ubuntu systems, `systemctl` is preferred for managing Apache services.
+
+After the practical, stop or terminate the EC2 instance if you no longer need it.
