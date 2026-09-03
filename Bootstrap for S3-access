@@ -1,0 +1,24 @@
+# Bootstrap for S3 Access
+
+```bash
+#!/bin/bash
+
+apt update -y
+apt install apache2 unzip curl -y
+
+# Download AWS CLI v2
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+
+# Extract AWS CLI
+unzip -q awscliv2.zip
+
+# Install AWS CLI
+./aws/install
+
+# Copy files from S3 bucket to Apache web directory
+aws s3 cp s3://rick-buck /var/www/html/ --recursive
+
+# Enable and start Apache
+systemctl enable apache2
+systemctl start apache2
+```
