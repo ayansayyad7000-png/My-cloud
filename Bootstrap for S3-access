@@ -1,5 +1,33 @@
 # Bootstrap for S3 Access
 
+## Simple Step-by-Step Guide
+
+Use this script as **EC2 User Data / bootstrap script**. The commands are kept in the same order so the server can set itself up automatically when the instance starts.
+
+---
+
+## Step 1 — Create an EC2 Instance
+
+Launch an Ubuntu EC2 instance.
+
+Attach an IAM Role that has permission to read the required S3 bucket.
+
+Also allow **HTTP Port 80** in the EC2 Security Group if you want to open the Apache website in a browser.
+
+---
+
+## Step 2 — Open User Data
+
+During EC2 launch, open:
+
+**Advanced details → User data**
+
+Paste the complete script shown below.
+
+---
+
+## Step 3 — Bootstrap Script
+
 ```bash
 #!/bin/bash
 
@@ -22,3 +50,44 @@ aws s3 cp s3://rick-buck /var/www/html/ --recursive
 systemctl enable apache2
 systemctl start apache2
 ```
+
+---
+
+## Step 4 — What the Script Does
+
+1. Updates Ubuntu packages.
+2. Installs Apache, unzip and curl.
+3. Downloads AWS CLI v2.
+4. Extracts and installs AWS CLI.
+5. Copies files from the S3 bucket to `/var/www/html/`.
+6. Enables Apache to start automatically.
+7. Starts the Apache web server.
+
+---
+
+## Step 5 — Launch the Instance
+
+Finish creating the EC2 instance and wait until it is running.
+
+The User Data script runs automatically during the first boot.
+
+---
+
+## Step 6 — Verify the Website
+
+Copy the EC2 **Public IPv4 address** and open:
+
+```text
+http://EC2-PUBLIC-IP
+```
+
+If the S3 files were copied successfully, the website content should appear.
+
+---
+
+## Important
+
+- The EC2 instance needs permission to access the S3 bucket.
+- Prefer an **IAM Role** instead of putting AWS Access Keys inside the script.
+- Replace the example bucket name only when you want to use a different S3 bucket.
+- Make sure HTTP Port 80 is allowed in the Security Group.
