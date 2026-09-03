@@ -1,89 +1,200 @@
-# ☁️ AWS Cloud Practicals
+<div align="center">
 
-**Name:** Ayan Sayyad  
-**Technology:** Amazon Web Services (AWS)  
-**Platform:** Ubuntu 24.04 EC2
+# ☁️ AWS Cloud Engineering Practicals
 
-## About
+### A Beginner-Friendly Hands-on Lab Repository by Ayan Sayyad
 
-This repository contains my AWS cloud practicals and hands-on experiments using **AWS EC2, S3, AWS CLI, CloudWatch, EBS, Apache, Linux and Bash**.
+![AWS](https://img.shields.io/badge/AWS-Cloud_Practicals-FF9900?style=for-the-badge&logo=amazonwebservices&logoColor=white)
+![Ubuntu](https://img.shields.io/badge/Ubuntu-24.04-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)
+![Linux](https://img.shields.io/badge/Linux-CLI-FCC624?style=for-the-badge&logo=linux&logoColor=black)
+![Bash](https://img.shields.io/badge/Bash-Automation-4EAA25?style=for-the-badge&logo=gnubash&logoColor=white)
 
-Each practical is written in **simple step-by-step format**. Follow the steps in order and run the commands one by one.
+**EC2 · S3 · IAM · CloudWatch · EBS · AWS CLI · Apache · Linux · Bash**
 
----
-
-## ✅ How to Use This Repository
-
-1. Open the practical you want to perform.
-2. Read **Step 1** first and complete it.
-3. Run the command shown under that step.
-4. Check the output before going to the next step.
-5. Continue with **Step 2, Step 3, Step 4...** in order.
-6. Read the **Important / Security Notes** at the end of the practical.
-
-> Commands are kept separately inside code blocks so they are easy to copy and run.
+</div>
 
 ---
 
-## 📚 Practicals Covered
+## 🚀 Start Here
 
-### Practical 1 — AWS CLI Setup
-Install AWS CLI v2 on Ubuntu, verify it and use basic S3 commands.
+This repository is designed so that even a beginner can open a practical and follow it from **Step 1 to the final result** without guessing where to click or where to run a command.
 
-### Practical 2 — EC2 Web Server
-Launch Ubuntu EC2, install Apache and open the website using the EC2 public IP.
+Every practical uses the same format:
 
-### Practical 3 — EC2 Bootstrap / User Data
-Use a bootstrap script to automatically install Apache and AWS CLI when EC2 starts.
+| Symbol | Meaning | What you should do |
+|---|---|---|
+| 🌐 **WHERE TO GO** | Website or application | Open AWS Console, EC2 terminal, browser, etc. |
+| 🧭 **WHAT TO DO** | Click/navigation instructions | Follow the exact menu or button path |
+| 💻 **COMMAND** | Linux/AWS CLI command | Copy and run it in the EC2 terminal |
+| 📝 **WHAT IT DOES** | Simple explanation | Understand why you are running the command |
+| ✅ **CHECK** | Expected result | Confirm the step worked before continuing |
+| ➡️ **NEXT** | Next action | Move to the next numbered step |
 
-### Practical 4 — S3 Access from EC2
-Give EC2 permission using an IAM role and transfer files between EC2 and S3.
-
-### Practical 5 — CloudWatch Agent Setup
-Install and configure the CloudWatch Agent on EC2.
-
-### Practical 6 — CloudWatch Log Monitoring
-Send Ubuntu log files from EC2 to CloudWatch Logs.
-
-### Practical 7 — CloudWatch RAM Monitoring
-Monitor EC2 memory usage using the CloudWatch Agent.
-
-### Practical 8 — CPU and System Stress Testing
-Generate CPU/system load and observe monitoring metrics.
-
-### Practical 9 — EBS Volume Setup and Mounting
-Create, attach, format, mount and unmount an EBS volume.
-
-### Practical 10 — Uploading Data to Amazon S3
-Upload and download dataset files using AWS CLI for a simple data-pipeline flow.
+> **Golden rule:** Do not jump between steps. Complete the current step, check the result, and only then continue.
 
 ---
 
-## 🛠️ Technologies Used
+## 🧰 What You Need
 
-- AWS EC2
+1. An **AWS account**.
+2. Access to the **AWS Management Console**: https://console.aws.amazon.com/
+3. Basic knowledge of opening a terminal.
+4. An Ubuntu 24.04 EC2 instance for terminal-based practicals.
+5. A browser for checking Apache websites and AWS service pages.
+
+### The three screens you will use most
+
+```text
+1. AWS Management Console  → create/configure AWS resources
+2. EC2 Terminal            → run Linux and AWS CLI commands
+3. Web Browser             → verify websites and AWS dashboards
+```
+
+---
+
+## 🗺️ Recommended Learning Flow
+
+```mermaid
+flowchart LR
+    A[AWS Console] --> B[Launch EC2]
+    B --> C[Connect to Ubuntu Terminal]
+    C --> D[Linux + AWS CLI]
+    D --> E[S3 / EBS / Apache]
+    E --> F[CloudWatch Monitoring]
+    F --> G[Automation / Bootstrap]
+```
+
+---
+
+## 📚 Practical Index
+
+| # | Practical | Main Screen | What You Learn |
+|---:|---|---|---|
+| 1 | [AWS CLI Setup on Ubuntu](AWS-CLI-Setup.md) | EC2 Terminal | Install and verify AWS CLI v2 |
+| 2 | [Installing Web Server on EC2](Installing%20Web%20Server%20on%20EC2) | AWS Console + EC2 + Browser | Launch EC2 and deploy Apache |
+| 3 | [Bootstrap for S3 Access](Bootstrap%20for%20S3-access) | EC2 Launch Wizard | Automate server setup with User Data |
+| 4 | [Getting Data on S3 for Data Pipeline](Getting%20Data%20on%20S3%20for%20Data%20Pipeline) | IAM + EC2 + S3 | Transfer files between EC2 and S3 |
+| 5 | [CloudWatch Agent Setup on EC2](AWS%20CloudWatch%20Agent%20Setup%20on%20EC2) | IAM + EC2 + CloudWatch | Install and start CloudWatch Agent |
+| 6 | [CloudWatch Log Monitoring](CloudWatch%20Log%20Monitoring%20on%20EC2) | EC2 + CloudWatch Logs | Send Ubuntu logs to CloudWatch |
+| 7 | [CloudWatch RAM Monitoring](CloudWatch%20RAM%20Monitoring%20on%20EC2) | EC2 + CloudWatch Metrics | Monitor memory using CWAgent |
+| 8 | [CPU & System Stress Testing](AWS%20CLI%20and%20System%20Stress%20Testing%20on%20Ubuntu%2024.04) | EC2 Terminal + CloudWatch | Generate and observe system load |
+| 9 | [EBS Volume Setup & Mounting](EBS%20Volume%20Setup%20and%20Mounting) | EC2 Console + Terminal | Attach and mount extra storage |
+
+---
+
+## 🧠 How to Read a Practical
+
+Example:
+
+### Step X — Install a Package
+
+**🌐 WHERE TO GO**  
+EC2 instance → **Connect** → **EC2 Instance Connect** → **Connect**
+
+**🧭 WHAT TO DO**  
+Once the Ubuntu terminal opens, run the command below.
+
+**💻 COMMAND**
+
+```bash
+sudo apt update -y
+```
+
+**📝 WHAT IT DOES**  
+Refreshes Ubuntu's package list so the server knows which package versions are available.
+
+**✅ CHECK**  
+The command should finish without a fatal error and return you to the terminal prompt.
+
+**➡️ NEXT**  
+Continue to the next numbered step.
+
+This same pattern is used throughout the repository.
+
+---
+
+## 🏗️ Services Covered
+
+### Compute
+- Amazon EC2
+- Ubuntu server setup
+- Security Groups
+- EC2 Instance Connect
+
+### Storage
 - Amazon S3
-- AWS CLI v2
-- Amazon CloudWatch
 - Amazon EBS
-- Apache2
-- Ubuntu 24.04
-- Linux
+- Linux mount points
+
+### Monitoring
+- Amazon CloudWatch
+- CloudWatch Agent
+- Log groups
+- RAM metrics
+- CPU/system stress testing
+
+### Automation & Web
+- EC2 User Data / bootstrap scripts
+- AWS CLI v2
 - Bash
+- Apache2 Web Server
 
 ---
 
-## 🔐 Important Security Note
+## 🔐 Security Rules Used in These Labs
 
-AWS Access Keys, Secret Keys, passwords, private keys and other sensitive credentials are **not included** in this repository.
-
-For EC2 access to AWS services, use **IAM Roles** whenever possible instead of storing access keys on the server.
-
-Also terminate EC2 instances and remove unused AWS resources after completing a practical to avoid unnecessary charges.
+- Never upload **AWS Access Keys**, **Secret Keys**, passwords or private keys to GitHub.
+- Prefer **IAM Roles for EC2** instead of saving credentials on a server.
+- Use the minimum IAM permissions required for a task whenever possible.
+- Do not make an S3 bucket publicly writable.
+- Check a disk carefully before using `mkfs`; formatting can erase data.
 
 ---
+
+## 💰 Cost Safety
+
+Some AWS resources can continue generating charges while they exist.
+
+After a practical, check:
+
+**AWS Console → EC2 → Instances / Volumes**  
+**AWS Console → S3 → Buckets**  
+**AWS Console → CloudWatch → Log groups**
+
+Stop, terminate or delete resources that you no longer need.
+
+---
+
+## ✅ Best Way to Practice
+
+```text
+Read Step 1
+   ↓
+Open the screen mentioned in WHERE TO GO
+   ↓
+Follow WHAT TO DO
+   ↓
+Run COMMAND if shown
+   ↓
+Read WHAT IT DOES
+   ↓
+Confirm CHECK
+   ↓
+Go to NEXT
+```
+
+Do this for every step and the complete practical becomes easy to remember and repeat.
+
+---
+
+<div align="center">
 
 ## 👨‍💻 Author
 
 **Ayan Sayyad**  
-B.Tech Information Technology
+B.Tech Information Technology  
+AWS · Linux · DevOps · Python · Cloud Engineering
+
+**Learning by building real cloud labs, one step at a time.**
+
+</div>
