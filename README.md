@@ -71,14 +71,14 @@ flowchart LR
 | # | Practical | Main Screen | What You Learn |
 |---:|---|---|---|
 | 1 | [AWS CLI Setup on Ubuntu](AWS-CLI-Setup.md) | EC2 Terminal | Install and verify AWS CLI v2 |
-| 2 | [Installing Web Server on EC2](Installing%20Web%20Server%20on%20EC2) | AWS Console + EC2 + Browser | Launch EC2 and deploy Apache |
-| 3 | [Bootstrap for S3 Access](Bootstrap%20for%20S3-access) | EC2 Launch Wizard | Automate server setup with User Data |
-| 4 | [Getting Data on S3 for Data Pipeline](Getting%20Data%20on%20S3%20for%20Data%20Pipeline) | IAM + EC2 + S3 | Transfer files between EC2 and S3 |
-| 5 | [CloudWatch Agent Setup on EC2](AWS%20CloudWatch%20Agent%20Setup%20on%20EC2) | IAM + EC2 + CloudWatch | Install and start CloudWatch Agent |
-| 6 | [CloudWatch Log Monitoring](CloudWatch%20Log%20Monitoring%20on%20EC2) | EC2 + CloudWatch Logs | Send Ubuntu logs to CloudWatch |
-| 7 | [CloudWatch RAM Monitoring](CloudWatch%20RAM%20Monitoring%20on%20EC2) | EC2 + CloudWatch Metrics | Monitor memory using CWAgent |
-| 8 | [CPU & System Stress Testing](AWS%20CLI%20and%20System%20Stress%20Testing%20on%20Ubuntu%2024.04) | EC2 Terminal + CloudWatch | Generate and observe system load |
-| 9 | [EBS Volume Setup & Mounting](EBS%20Volume%20Setup%20and%20Mounting) | EC2 Console + Terminal | Attach and mount extra storage |
+| 2 | [Installing Web Server on EC2](Installing%20Web%20Server%20on%20EC2.md) | AWS Console + EC2 + Browser | Launch EC2 and deploy Apache |
+| 3 | [Bootstrap for S3 Access](Bootstrap%20for%20S3-access.md) | EC2 Launch Wizard | Automate server setup with User Data |
+| 4 | [Getting Data on S3 for Data Pipeline](Getting%20Data%20on%20S3%20for%20Data%20Pipeline.md) | IAM + EC2 + S3 | Transfer files between EC2 and S3 |
+| 5 | [CloudWatch Agent Setup on EC2](AWS%20CloudWatch%20Agent%20Setup%20on%20EC2.md) | IAM + EC2 + CloudWatch | Install and start CloudWatch Agent |
+| 6 | [CloudWatch Log Monitoring](CloudWatch%20Log%20Monitoring%20on%20EC2.md) | EC2 + CloudWatch Logs | Send Ubuntu logs to CloudWatch |
+| 7 | [CloudWatch RAM Monitoring](CloudWatch%20RAM%20Monitoring%20on%20EC2.md) | EC2 + CloudWatch Metrics | Monitor memory using CWAgent |
+| 8 | [CPU & System Stress Testing](AWS%20CLI%20and%20System%20Stress%20Testing%20on%20Ubuntu%2024.04.md) | EC2 Terminal + CloudWatch | Generate and observe system load |
+| 9 | [EBS Volume Setup & Mounting](EBS%20Volume%20Setup%20and%20Mounting.md) | EC2 Console + Terminal | Attach and mount extra storage |
 
 ---
 
