@@ -1,38 +1,44 @@
 # EBS Volume Setup and Mounting
 
-## 1. Create an EBS Volume
+## Simple Step-by-Step Guide
 
-Go to:
+Follow the steps in order. Always check the device name before formatting or mounting a volume.
+
+---
+
+## Step 1 — Create an EBS Volume
+
+Open:
 
 **AWS Console → EC2 → Elastic Block Store → Volumes → Create Volume**
 
 Select the required:
 
-* Volume Type
-* Size
-* Availability Zone
+- Volume Type
+- Size
+- Availability Zone
 
-> The EBS volume and EC2 instance must be in the same Availability Zone to attach the volume.
+> The EBS volume and EC2 instance must be in the same Availability Zone for normal attachment.
 
 ---
 
-## 2. Attach the EBS Volume
+## Step 2 — Attach the EBS Volume
 
-Select the volume:
+Select the new volume and open:
 
 **Actions → Attach Volume**
 
-Select the required EC2 instance and attach the volume.
+Choose your EC2 instance and attach the volume.
 
 ---
 
-## 3. Connect to the EC2 Instance
+## Step 3 — Connect to the EC2 Instance
 
-Connect to the EC2 instance using SSH or EC2 Instance Connect.
+Connect using SSH or EC2 Instance Connect.
 
 ---
 
-## 4. Check Whether the Volume Is Attached
+## Step 4 — Check the Attached Disk
 
 Run:
 
@@ -52,27 +58,27 @@ nvme0n1     259:0    0    8G  0 disk
 nvme1n1     259:3    0   10G  0 disk
 ```
 
-Here, `nvme1n1` is the newly attached EBS volume.
+In this example, `nvme1n1` is the new EBS volume.
 
-> The device name may be different on your EC2 instance. Do not blindly use `/dev/xvdf`.
+> Your device name may be different. Always use the name shown by `lsblk` on your own EC2 instance.
 
 ---
 
-## 5. Check Whether the Volume Contains Data
+## Step 5 — Check Whether the Volume Already Has a File System
 
-For example:
+Example command:
 
 ```bash
 sudo file -s /dev/nvme1n1
 ```
 
-If the volume is empty, you may see:
+If the new volume is empty, you may see:
 
 ```text
 /dev/nvme1n1: data
 ```
 
-If it already has a filesystem, you may see something like:
+If it already contains a file system, you may see something similar to:
 
 ```text
 /dev/nvme1n1: Linux rev 1.0 ext4 filesystem
@@ -82,19 +88,21 @@ If it already has a filesystem, you may see something like:
 
 ---
 
-## 6. Create a File System
+## Step 6 — Create a File System on a New Empty Volume
 
-For a new/empty volume:
+Only for a new/empty volume, run:
 
 ```bash
 sudo mkfs -t ext4 /dev/nvme1n1
 ```
 
-> Formatting the volume deletes existing data on that volume.
+> Formatting removes existing data on that volume.
 
 ---
 
-## 7. Create a Mount Directory
+## Step 7 — Create a Mount Folder
+
+Run:
 
 ```bash
 sudo mkdir /fileserver
@@ -102,13 +110,15 @@ sudo mkdir /fileserver
 
 ---
 
-## 8. Mount the EBS Volume
+## Step 8 — Mount the EBS Volume
+
+Run:
 
 ```bash
 sudo mount /dev/nvme1n1 /fileserver
 ```
 
-Check the mount:
+Check that it is mounted:
 
 ```bash
 df -h
@@ -116,7 +126,9 @@ df -h
 
 ---
 
-## 9. Access the EBS Volume
+## Step 9 — Open the Mounted Volume
+
+Run:
 
 ```bash
 cd /fileserver
@@ -130,17 +142,15 @@ ls -la
 
 ---
 
-## 10. Create Files
+## Step 10 — Create a Test File
 
-Create a file using nano:
+Run:
 
 ```bash
 sudo nano test.txt
 ```
 
-Add some text and save it.
-
-You can check the file:
+Type some test text, save the file and then check it:
 
 ```bash
 ls -la
@@ -148,15 +158,19 @@ ls -la
 
 ---
 
-## 11. Unmount the EBS Volume
+## Step 11 — Leave the Mounted Folder
 
-First leave the mounted directory:
+Before unmounting, go back to your home directory:
 
 ```bash
 cd ~
 ```
 
-Then unmount:
+---
+
+## Step 12 — Unmount the EBS Volume
+
+Run:
 
 ```bash
 sudo umount /fileserver
@@ -164,7 +178,9 @@ sudo umount /fileserver
 
 ---
 
-## 12. Check Whether the Volume Is Unmounted
+## Step 13 — Verify That the Volume Is Unmounted
+
+Run:
 
 ```bash
 lsblk
@@ -182,7 +198,7 @@ The `/fileserver` mount point should no longer appear.
 
 ## Important
 
-* EBS volume and EC2 instance must be in the same Availability Zone when attaching normally.
-* Always check the device name using `lsblk`.
-* Do not run `mkfs` on a volume containing important data.
-* Unmount the volume before detaching it from the EC2 instance.
+- Always check the device name using `lsblk`.
+- Do not run `mkfs` on a volume containing important data.
+- Unmount the volume before detaching it from EC2.
+- Delete unused EBS volumes after the practical if they are no longer required, because EBS storage can continue to incur charges.
