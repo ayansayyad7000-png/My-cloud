@@ -1,44 +1,70 @@
 # AWS CLI and System Stress Testing on Ubuntu 24.04
 
-## 1. Install AWS CLI on Ubuntu 24.04
+## Simple Step-by-Step Guide
 
-Update packages:
+Follow the steps in order. Run one command at a time and check the output before continuing.
+
+---
+
+## Step 1 — Update Ubuntu
+
+First update the package list:
 
 ```bash
 sudo apt update
 ```
 
-Install required packages:
+---
+
+## Step 2 — Install Required Packages
+
+Install `unzip` and `curl`:
 
 ```bash
 sudo apt install unzip curl -y
 ```
 
-Download AWS CLI v2:
+---
+
+## Step 3 — Download AWS CLI v2
+
+Download the AWS CLI installer:
 
 ```bash
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
 ```
 
-Extract the installer:
+---
+
+## Step 4 — Extract AWS CLI
+
+Extract the ZIP file:
 
 ```bash
 unzip -q awscliv2.zip
 ```
 
-Install AWS CLI:
+---
+
+## Step 5 — Install AWS CLI
+
+Run the installer:
 
 ```bash
 sudo ./aws/install
 ```
 
-Check the installation:
+---
+
+## Step 6 — Verify AWS CLI
+
+Check the installed version:
 
 ```bash
 aws --version
 ```
 
-Check AWS CLI help:
+Open AWS CLI help if required:
 
 ```bash
 aws help
@@ -46,28 +72,32 @@ aws help
 
 ---
 
-## 2. Stress Test for CPU Load
+## Step 7 — Install the Stress Tool
 
-Install the stress package:
+Update packages and install `stress`:
 
 ```bash
 sudo apt update
 sudo apt install stress -y
 ```
 
-Generate CPU load using all available CPU cores:
+---
+
+## Step 8 — Generate CPU Load for 10 Minutes
+
+Run this command to use all available CPU cores for 600 seconds:
 
 ```bash
 stress --cpu $(nproc) --timeout 600
 ```
 
-The command will generate CPU load for **600 seconds (10 minutes)**.
+The command will stop automatically after **600 seconds (10 minutes)**.
 
 ---
 
-## 3. Continuous System Load Monitoring
+## Step 9 — Install Advanced Monitoring and Stress Tools
 
-Install monitoring and stress-testing tools:
+Install `stress-ng`, `sysstat`, `iotop` and `iftop`:
 
 ```bash
 sudo apt update
@@ -80,37 +110,47 @@ Check the `stress-ng` version:
 stress-ng --version
 ```
 
-Start continuous system load:
+---
+
+## Step 10 — Start Continuous System Load
+
+Run:
 
 ```bash
 nohup stress-ng --cpu 0 --cpu-load 70 --vm 0 --vm-bytes 60% --io 2 --hdd 2 --hdd-bytes 1G --timeout 0 > /tmp/stress-ng.out 2>&1 & echo $! > /tmp/stress.pid
 ```
 
-> `--timeout 0` means the stress test will continue until it is manually stopped.
+> `--timeout 0` means the stress test continues until you stop it manually.
 
 ---
 
-## 4. Monitor System Resources
+## Step 11 — Monitor CPU and Memory
 
-Use `top` to monitor CPU and memory:
+Use `top`:
 
 ```bash
 top
 ```
 
-Other useful commands:
+Check memory:
 
 ```bash
 free -h
 ```
 
+Check CPU and disk statistics:
+
 ```bash
 iostat
 ```
 
+Check disk I/O:
+
 ```bash
 iotop
 ```
+
+Check network traffic:
 
 ```bash
 iftop
@@ -118,34 +158,46 @@ iftop
 
 ---
 
-## 5. Stop the Continuous Stress Test
+## Step 12 — Check the Stress Process ID
 
-The process ID is stored in:
+The process ID was saved in this file:
 
 ```bash
 cat /tmp/stress.pid
 ```
 
-Stop the stress process:
+---
+
+## Step 13 — Stop the Continuous Stress Test
+
+Stop normally:
 
 ```bash
 kill $(cat /tmp/stress.pid)
 ```
 
-If required, force stop:
+If it does not stop, force stop it:
 
 ```bash
 kill -9 $(cat /tmp/stress.pid)
 ```
 
-Verify that the stress process has stopped:
+---
+
+## Step 14 — Verify That Stress Testing Stopped
+
+Run:
 
 ```bash
 ps aux | grep stress-ng
 ```
 
+Check that the stress process is no longer running.
+
+---
+
 ## Important
 
-Do not leave continuous stress testing running unnecessarily because it consumes CPU, memory, disk I/O, and may increase EC2 usage/cost.
+Do not leave continuous stress testing running unnecessarily. It uses CPU, memory and disk I/O and may increase EC2 usage/cost.
 
-For AWS monitoring practicals, start the stress test only when you need to observe CloudWatch metrics.
+For CloudWatch practicals, start the stress test only when you need to observe monitoring metrics and stop it after testing.
