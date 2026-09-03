@@ -1,0 +1,197 @@
+# Getting Data on S3 for Data Pipeline
+
+## 1. Create IAM Role for S3 Access
+
+Go to:
+
+**AWS Console → IAM → Roles → Create Role**
+
+Select:
+
+```text
+Trusted entity: AWS service
+Use case: EC2
+```
+
+Attach the required S3 permissions.
+
+For a basic practical, you can use:
+
+```text
+AmazonS3FullAccess
+```
+
+For a real project, use a more restricted custom policy that allows access only to the required S3 bucket.
+
+Create the role.
+
+---
+
+## 2. Launch an EC2 Instance
+
+Create an EC2 instance and select the IAM role created above.
+
+---
+
+## 3. Connect to the EC2 Instance
+
+Connect to the EC2 instance using SSH or EC2 Instance Connect.
+
+---
+
+## 4. Install AWS CLI v2
+
+Update the packages:
+
+```bash
+sudo apt update -y
+```
+
+Install required packages:
+
+```bash
+sudo apt install unzip curl -y
+```
+
+Download AWS CLI v2:
+
+```bash
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+```
+
+Extract:
+
+```bash
+unzip -q awscliv2.zip
+```
+
+Install:
+
+```bash
+sudo ./aws/install
+```
+
+Check the installation:
+
+```bash
+aws --version
+```
+
+---
+
+## 5. Create an S3 Bucket
+
+Go to:
+
+**AWS Console → S3 → Create bucket**
+
+Create a bucket with a unique name.
+
+Example:
+
+```text
+ayan-data-pipeline-2026
+```
+
+> S3 bucket names must be globally unique.
+
+### Important
+
+Do **NOT** enable public write access.
+
+The EC2 instance should access S3 through its IAM role.
+
+---
+
+## 6. Download Dataset
+
+For testing, download a dataset/file to the EC2 instance.
+
+Example:
+
+```bash
+wget <DATASET_URL>
+```
+
+Check the downloaded file:
+
+```bash
+ls -lh
+```
+
+> Avoid using random/untrusted public download links for production pipelines. Use a trusted dataset source.
+
+---
+
+## 7. Upload Dataset to S3
+
+Suppose the downloaded file is:
+
+```text
+/root/dataset.csv
+```
+
+Upload it:
+
+```bash
+aws s3 cp /root/dataset.csv s3://ayan-data-pipeline-2026/
+```
+
+For uploading a complete directory:
+
+```bash
+aws s3 cp /root/data/ s3://ayan-data-pipeline-2026/data/ --recursive
+```
+
+---
+
+## 8. Verify the Data in S3
+
+List the bucket:
+
+```bash
+aws s3 ls s3://ayan-data-pipeline-2026/
+```
+
+You can also check the bucket from:
+
+**AWS Console → S3 → Bucket → Objects**
+
+---
+
+## 9. Download Data from S3
+
+To download a file from S3:
+
+```bash
+aws s3 cp s3://ayan-data-pipeline-2026/dataset.csv /root/
+```
+
+To download a complete folder:
+
+```bash
+aws s3 cp s3://ayan-data-pipeline-2026/data/ /root/data/ --recursive
+```
+
+---
+
+## Data Pipeline Flow
+
+```text
+Dataset
+   ↓
+EC2 Instance
+   ↓
+AWS CLI
+   ↓
+Amazon S3
+   ↓
+Data Pipeline / Processing
+```
+
+## Security Notes
+
+* Do not make the S3 bucket publicly writable.
+* Do not upload AWS Access Keys or Secret Keys to GitHub.
+* Prefer IAM Roles for EC2 instead of storing credentials.
+* For production, follow the principle of least privilege.
