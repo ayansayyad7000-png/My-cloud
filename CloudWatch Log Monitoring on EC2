@@ -1,8 +1,14 @@
 # CloudWatch Log Monitoring on EC2
 
-## 1. Create IAM Role
+## Simple Step-by-Step Guide
 
-Go to:
+Follow each step in order and run the commands one by one.
+
+---
+
+## Step 1 — Create an IAM Role
+
+Open:
 
 **AWS Console → IAM → Roles → Create Role**
 
@@ -13,7 +19,7 @@ Trusted entity: AWS service
 Use case: EC2
 ```
 
-For permissions, attach:
+Attach this permission:
 
 ```text
 CloudWatchAgentServerPolicy
@@ -21,11 +27,19 @@ CloudWatchAgentServerPolicy
 
 Create the role and attach it to your EC2 instance.
 
-> The IAM role allows the CloudWatch Agent to send logs and metrics to AWS CloudWatch without storing AWS Access Keys on the EC2 instance.
+> This lets the CloudWatch Agent send logs and metrics without storing AWS Access Keys on the EC2 instance.
 
 ---
 
-## 2. Update Ubuntu
+## Step 2 — Connect to EC2
+
+Connect to the Ubuntu EC2 instance using SSH or EC2 Instance Connect.
+
+---
+
+## Step 3 — Update Ubuntu
+
+Run:
 
 ```bash
 sudo apt update -y
@@ -33,9 +47,9 @@ sudo apt update -y
 
 ---
 
-## 3. Download CloudWatch Agent
+## Step 4 — Download the CloudWatch Agent
 
-For Ubuntu 64-bit:
+Run:
 
 ```bash
 wget https://amazoncloudwatch-agent.s3.amazonaws.com/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb
@@ -43,7 +57,9 @@ wget https://amazoncloudwatch-agent.s3.amazonaws.com/ubuntu/amd64/latest/amazon-
 
 ---
 
-## 4. Install CloudWatch Agent
+## Step 5 — Install the CloudWatch Agent
+
+Run:
 
 ```bash
 sudo dpkg -i -E ./amazon-cloudwatch-agent.deb
@@ -51,31 +67,21 @@ sudo dpkg -i -E ./amazon-cloudwatch-agent.deb
 
 ---
 
-## 5. Configure CloudWatch Agent
+## Step 6 — Configure Log Monitoring
 
-Run:
+Start the configuration wizard:
 
 ```bash
 sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-config-wizard
 ```
 
-During the wizard, select the log file that you want to monitor.
-
-For example:
+When the wizard asks which log file to monitor, you can use:
 
 ```text
 /var/log/syslog
 ```
 
-You will also be asked for:
-
-```text
-Log Group Name
-Log Stream Name
-Initial Position
-```
-
-Example:
+Example settings:
 
 ```text
 Log Group Name: /ec2/syslog
@@ -83,13 +89,13 @@ Log Stream Name: {instance_id}
 Initial Position: From start of file
 ```
 
-The wizard will create a configuration file.
+Complete the wizard so the configuration file is created.
 
 ---
 
-## 6. Start the CloudWatch Agent
+## Step 7 — Start the CloudWatch Agent
 
-If the configuration file is located at:
+If the configuration file is here:
 
 ```text
 /opt/aws/amazon-cloudwatch-agent/bin/config.json
@@ -107,7 +113,9 @@ sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
 
 ---
 
-## 7. Check CloudWatch Agent Status
+## Step 8 — Check Agent Status
+
+Run:
 
 ```bash
 sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
@@ -115,7 +123,7 @@ sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
 -m ec2
 ```
 
-The agent should show:
+The status should show:
 
 ```text
 running
@@ -123,32 +131,28 @@ running
 
 ---
 
-## 8. Check Logs in CloudWatch
+## Step 9 — Check Logs in AWS CloudWatch
 
-Go to:
+Open:
 
 **AWS Console → CloudWatch → Logs → Log groups**
 
-Open the log group that you configured.
-
-You should see the logs from your EC2 instance.
+Open the log group you created. You should see logs coming from the EC2 instance.
 
 ---
 
 ## Important
 
-Do NOT use:
+Do **not** use the old CloudWatch Logs Agent commands:
 
 ```bash
 curl https://s3.amazonaws.com/aws-cloudwatch/downloads/latest/awslogs-agent-setup.py -O
 ```
 
-and do NOT use:
-
 ```bash
 sudo python3 ./awslogs-agent-setup.py
 ```
 
-These commands belong to the old CloudWatch Logs Agent setup.
+For a new setup, use the Amazon CloudWatch Agent shown above.
 
-Also, do not enter or upload AWS Access Keys and Secret Keys on the EC2 instance. Use the IAM role attached to the EC2 instance.
+Do not upload AWS Access Keys, Secret Keys, passwords or credential files to GitHub. Use an IAM role attached to EC2.
