@@ -1,136 +1,264 @@
-# AWS CLI Setup on Ubuntu — Ayan Sayyad
+# 🧰 Practical 1 — AWS CLI Setup on Ubuntu EC2
 
-## Simple Step-by-Step Guide
+> **Goal:** Install AWS CLI v2 on an Ubuntu EC2 instance, verify the installation, and test AWS access safely.
 
-Follow these steps **in order**. Run one command at a time and check that it works before moving to the next step.
+## Before You Start
 
----
+You will use two places:
 
-## Step 1 — Check Python
-
-First check whether Python 3 is already installed:
-
-```bash
-python3 --version
-```
-
-If Python is not installed, install it:
-
-```bash
-sudo apt update
-sudo apt install python3 -y
-```
+- 🌐 **AWS Management Console** — https://console.aws.amazon.com/
+- 💻 **EC2 Ubuntu Terminal** — opened using EC2 Instance Connect or SSH
 
 ---
 
-## Step 2 — Download AWS CLI v2
+## Step 1 — Open Your EC2 Instance
 
-Download the official AWS CLI v2 installer:
+**🌐 WHERE TO GO**  
+AWS Console → **EC2** → **Instances** → **Instances**
+
+**🧭 WHAT TO DO**
+1. Select your Ubuntu EC2 instance.
+2. Make sure **Instance state = Running**.
+3. Click **Connect**.
+4. Choose **EC2 Instance Connect**.
+5. Click **Connect** again.
+
+**✅ CHECK**  
+A browser terminal should open and you should see a prompt similar to:
+
+```text
+ubuntu@ip-xxx-xxx-xxx-xxx:~$
+```
+
+➡️ Keep this terminal open for the next steps.
+
+---
+
+## Step 2 — Update Ubuntu Package Information
+
+**🌐 WHERE TO GO**  
+EC2 Ubuntu Terminal
+
+**💻 COMMAND**
+
+```bash
+sudo apt update -y
+```
+
+**📝 WHAT IT DOES**  
+Downloads the latest package information from Ubuntu repositories. This does not upgrade everything; it refreshes the package list.
+
+**✅ CHECK**  
+The command should finish and return to the terminal prompt without a fatal error.
+
+---
+
+## Step 3 — Install Required Tools
+
+**🌐 WHERE TO GO**  
+EC2 Ubuntu Terminal
+
+**💻 COMMAND**
+
+```bash
+sudo apt install -y curl unzip
+```
+
+**📝 WHAT IT DOES**
+- `curl` downloads the AWS CLI installer.
+- `unzip` extracts the downloaded ZIP file.
+- `-y` automatically confirms the installation prompt.
+
+**✅ CHECK**
+
+```bash
+curl --version
+unzip -v
+```
+
+If both commands show version information, continue.
+
+---
+
+## Step 4 — Download AWS CLI v2
+
+**🌐 WHERE TO GO**  
+EC2 Ubuntu Terminal
+
+**💻 COMMAND**
 
 ```bash
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
 ```
 
----
+**📝 WHAT IT DOES**  
+Downloads the official AWS CLI v2 Linux installer and saves it as `awscliv2.zip`.
 
-## Step 3 — Install unzip
-
-The downloaded file is a ZIP file, so install `unzip`:
+**✅ CHECK**
 
 ```bash
-sudo apt install unzip -y
+ls -lh awscliv2.zip
+```
+
+You should see the ZIP file in the current folder.
+
+---
+
+## Step 5 — Extract the Installer
+
+**🌐 WHERE TO GO**  
+EC2 Ubuntu Terminal
+
+**💻 COMMAND**
+
+```bash
+unzip -q awscliv2.zip
+```
+
+**📝 WHAT IT DOES**  
+Extracts the installer into a folder named `aws`.
+
+**✅ CHECK**
+
+```bash
+ls -la
+```
+
+Look for:
+
+```text
+aws/
+awscliv2.zip
 ```
 
 ---
 
-## Step 4 — Extract AWS CLI
+## Step 6 — Install AWS CLI v2
 
-Extract the ZIP file:
+**🌐 WHERE TO GO**  
+EC2 Ubuntu Terminal
 
-```bash
-unzip awscliv2.zip
-```
-
----
-
-## Step 5 — Install AWS CLI
-
-Run the AWS installer:
+**💻 COMMAND**
 
 ```bash
 sudo ./aws/install
 ```
 
----
+**📝 WHAT IT DOES**  
+Runs the AWS CLI installer with administrator permission.
 
-## Step 6 — Check the Installation
-
-Check the installed AWS CLI version:
+**✅ CHECK**
 
 ```bash
 aws --version
 ```
 
-You can also open AWS CLI help:
+Expected format:
 
-```bash
-aws help
+```text
+aws-cli/2.x.x Python/... Linux/...
 ```
 
 ---
 
-## Step 7 — Configure AWS CLI
+## Step 7 — Attach an IAM Role to EC2 (Recommended)
 
-Run:
+> On EC2, an IAM Role is safer than saving long-term Access Keys on the server.
+
+**🌐 WHERE TO GO**  
+AWS Console → **EC2** → **Instances** → select your instance
+
+**🧭 WHAT TO DO**
+1. Click **Actions**.
+2. Open **Security**.
+3. Click **Modify IAM role**.
+4. Select a role that has the AWS permissions required for your practical.
+5. Click **Update IAM role**.
+
+If you do not already have a role:
+
+**AWS Console → IAM → Roles → Create role → AWS service → EC2**
+
+Attach only the permissions required for your lab.
+
+**✅ CHECK**  
+Return to the EC2 terminal and run:
 
 ```bash
-aws configure
+aws sts get-caller-identity
 ```
 
-Enter the required details when asked:
-
-```text
-AWS Access Key ID [None]:
-AWS Secret Access Key [None]:
-Default region name [None]:
-Default output format [None]:
-```
-
-Example format:
-
-```text
-AWS Access Key ID: YOUR_ACCESS_KEY
-AWS Secret Access Key: YOUR_SECRET_KEY
-Default region name: ap-south-1
-Default output format: json
-```
-
-> For EC2 practicals, an IAM Role is safer than storing long-term access keys on the server.
+If access is working, AWS returns your Account, ARN and UserId/role information.
 
 ---
 
-## Step 8 — Test S3 Access
+## Step 8 — Test Basic AWS CLI Commands
 
-List S3 buckets:
+**🌐 WHERE TO GO**  
+EC2 Ubuntu Terminal
+
+Check your configured/default region:
+
+```bash
+aws configure get region
+```
+
+List S3 buckets that your IAM permissions allow you to see:
 
 ```bash
 aws s3 ls
 ```
 
-Access a specific S3 bucket:
+List one specific bucket:
 
 ```bash
-aws s3 ls s3://your-bucket-name
+aws s3 ls s3://YOUR-BUCKET-NAME
 ```
+
+**📝 WHAT IT DOES**  
+These commands confirm that AWS CLI is installed and able to communicate with AWS services.
+
+**✅ CHECK**  
+You should receive a result from AWS instead of `command not found`.
 
 ---
 
-## Step 9 — Locate AWS Configuration Files
+## Step 9 — Optional: Configure AWS CLI on a Local Computer
 
-Go to the home directory:
+> Use this only when you intentionally need a named CLI configuration on your own trusted machine. For an EC2 instance, prefer the IAM Role method from Step 7.
+
+**🌐 WHERE TO GO**  
+Your local Terminal / PowerShell / Command Prompt
+
+**💻 COMMAND**
 
 ```bash
-cd ~
+aws configure
+```
+
+AWS may ask for:
+
+```text
+AWS Access Key ID [None]:
+AWS Secret Access Key [None]:
+Default region name [None]: ap-south-1
+Default output format [None]: json
+```
+
+**🔐 SECURITY**  
+Never paste Access Keys into GitHub, screenshots, assignments or public chats.
+
+---
+
+## Step 10 — Know Where AWS CLI Stores Local Configuration
+
+**🌐 WHERE TO GO**  
+Terminal on the machine where you used `aws configure`
+
+Go to the AWS configuration directory:
+
+```bash
+cd ~/.aws
 ```
 
 List files:
@@ -139,59 +267,65 @@ List files:
 ls -la
 ```
 
-Open the AWS configuration directory:
-
-```bash
-cd ~/.aws
-```
-
-List the files:
-
-```bash
-ls -la
-```
-
-You may see:
+Typical files are:
 
 ```text
 config
 credentials
 ```
 
-To view credentials on your own private EC2 terminal:
-
-```bash
-cat credentials
-```
-
-To edit credentials:
-
-```bash
-nano credentials
-```
-
-> **Important:** Never copy, screenshot or upload the `credentials` file, AWS Access Key or Secret Key to GitHub.
+**⚠️ IMPORTANT**  
+The `credentials` file is sensitive. Do not upload or commit it.
 
 ---
 
-## Step 10 — Remove AWS Credentials When Needed
+## Step 11 — Clean Up After the Practical
 
-Delete only the credentials file:
+**🌐 WHERE TO GO**  
+AWS Console → **EC2** → **Instances**
 
-```bash
-rm ~/.aws/credentials
-```
+**🧭 WHAT TO DO**
+1. Select the test EC2 instance.
+2. If you need it later, choose **Instance state → Stop instance**.
+3. If the lab is completely finished and the instance is no longer needed, choose **Instance state → Terminate instance**.
 
-Or remove the complete AWS configuration directory:
+**✅ FINAL CHECK**
 
-```bash
-rm -rf ~/.aws
+You should now understand this sequence:
+
+```text
+AWS Console
+   ↓
+EC2 Instance
+   ↓
+Ubuntu Terminal
+   ↓
+Install AWS CLI
+   ↓
+Attach IAM Role
+   ↓
+aws sts get-caller-identity
+   ↓
+Run AWS CLI commands
 ```
 
 ---
 
-## Step 11 — Finish the Practical
+## 🧠 Commands to Remember
 
-After completing the practical, terminate the EC2 instance from the AWS Management Console if it is no longer required.
+```bash
+sudo apt update -y
+sudo apt install -y curl unzip
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip -q awscliv2.zip
+sudo ./aws/install
+aws --version
+aws sts get-caller-identity
+aws s3 ls
+```
 
-> **Warning:** Make sure the EC2 instance and its data are no longer needed before terminating it.
+## 🔐 Security Reminder
+
+- Prefer IAM Roles on EC2.
+- Never commit `.aws/credentials`.
+- Never publish Access Key IDs or Secret Access Keys.
