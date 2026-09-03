@@ -1,0 +1,113 @@
+# Installing Web Server on EC2
+
+---
+
+## Installing Web Server on EC2
+
+---
+
+### 1. Start an EC2 Instance
+
+* Launch an Ubuntu EC2 instance.
+
+* In the Security Group, allow:
+
+  * SSH — Port 22
+  * HTTP — Port 80
+
+### 2. Connect to the EC2 Server
+
+Connect to the EC2 instance using SSH.
+
+### 3. Take Control
+
+```bash
+sudo -i
+```
+
+### 4. Update the Server
+
+```bash
+apt update -y
+```
+
+### 5. Install Apache Web Server
+
+```bash
+apt install apache2 -y
+```
+
+### 6. Edit `index.html`
+
+```bash
+nano /var/www/html/index.html
+```
+
+Example content:
+
+```html
+<h1>Welcome to Ayan Sayyad's Web Server</h1>
+<p>Apache Web Server is running on AWS EC2.</p>
+```
+
+Save:
+
+* `Ctrl + O`
+* Enter
+* `Ctrl + X`
+
+### 7. Start Apache Web Server
+
+```bash
+systemctl start apache2
+```
+
+Enable Apache to start automatically after reboot:
+
+```bash
+systemctl enable apache2
+```
+
+### 8. Verify Apache Service
+
+```bash
+systemctl status apache2
+```
+
+If you see:
+
+```text
+active (running)
+```
+
+Apache is running successfully.
+
+### 9. Verify in Browser
+
+Copy the **Public IPv4 address** of the EC2 instance.
+
+Open in browser:
+
+```text
+http://EC2-PUBLIC-IP
+```
+
+The custom `index.html` page should appear.
+
+### Important
+
+Make sure **HTTP (Port 80)** is allowed in the EC2 Security Group.
+
+Do not use:
+
+```bash
+apt get update
+```
+
+Correct command:
+
+```bash
+apt update
+```
+
+For current Ubuntu systems, `systemctl` is preferred over the older `service` command.
