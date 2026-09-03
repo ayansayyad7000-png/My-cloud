@@ -1,65 +1,93 @@
 # AWS CLI Setup on Ubuntu — Ayan Sayyad
 
-## Check your Python installation
+## Simple Step-by-Step Guide
+
+Follow these steps **in order**. Run one command at a time and check that it works before moving to the next step.
+
+---
+
+## Step 1 — Check Python
+
+First check whether Python 3 is already installed:
 
 ```bash
 python3 --version
 ```
 
-## Install Python
+If Python is not installed, install it:
 
 ```bash
 sudo apt update
 sudo apt install python3 -y
 ```
 
-## Install AWS CLI
+---
 
-> AWS CLI v2 ko ab `pip` aur `get-pip.py` se install karne ki zarurat nahi hai.
+## Step 2 — Download AWS CLI v2
 
-Download AWS CLI v2:
+Download the official AWS CLI v2 installer:
 
 ```bash
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
 ```
 
-Install unzip:
+---
+
+## Step 3 — Install unzip
+
+The downloaded file is a ZIP file, so install `unzip`:
 
 ```bash
 sudo apt install unzip -y
 ```
 
-Extract AWS CLI:
+---
+
+## Step 4 — Extract AWS CLI
+
+Extract the ZIP file:
 
 ```bash
 unzip awscliv2.zip
 ```
 
-Install AWS CLI:
+---
+
+## Step 5 — Install AWS CLI
+
+Run the AWS installer:
 
 ```bash
 sudo ./aws/install
 ```
 
-## Test the AWS CLI Installation
+---
+
+## Step 6 — Check the Installation
+
+Check the installed AWS CLI version:
 
 ```bash
 aws --version
 ```
 
-You can also check:
+You can also open AWS CLI help:
 
 ```bash
 aws help
 ```
 
-## Configure AWS CLI
+---
+
+## Step 7 — Configure AWS CLI
+
+Run:
 
 ```bash
 aws configure
 ```
 
-Enter the required details:
+Enter the required details when asked:
 
 ```text
 AWS Access Key ID [None]:
@@ -68,7 +96,7 @@ Default region name [None]:
 Default output format [None]:
 ```
 
-Example:
+Example format:
 
 ```text
 AWS Access Key ID: YOUR_ACCESS_KEY
@@ -77,9 +105,13 @@ Default region name: ap-south-1
 Default output format: json
 ```
 
-## Accessing S3 Buckets
+> For EC2 practicals, an IAM Role is safer than storing long-term access keys on the server.
 
-List all S3 buckets:
+---
+
+## Step 8 — Test S3 Access
+
+List S3 buckets:
 
 ```bash
 aws s3 ls
@@ -91,7 +123,9 @@ Access a specific S3 bucket:
 aws s3 ls s3://your-bucket-name
 ```
 
-## Locate the AWS Credentials
+---
+
+## Step 9 — Locate AWS Configuration Files
 
 Go to the home directory:
 
@@ -105,13 +139,13 @@ List files:
 ls -la
 ```
 
-Go to the AWS configuration directory:
+Open the AWS configuration directory:
 
 ```bash
 cd ~/.aws
 ```
 
-List AWS configuration files:
+List the files:
 
 ```bash
 ls -la
@@ -124,36 +158,40 @@ config
 credentials
 ```
 
-View credentials:
+To view credentials on your own private EC2 terminal:
 
 ```bash
 cat credentials
 ```
 
-Edit credentials:
+To edit credentials:
 
 ```bash
 nano credentials
 ```
 
-> **Important:** Never upload the `credentials` file, AWS Access Key, or Secret Key to GitHub.
+> **Important:** Never copy, screenshot or upload the `credentials` file, AWS Access Key or Secret Key to GitHub.
 
-## Delete AWS Credentials
+---
 
-Delete the credentials file:
+## Step 10 — Remove AWS Credentials When Needed
+
+Delete only the credentials file:
 
 ```bash
 rm ~/.aws/credentials
 ```
 
-If you want to remove the complete AWS configuration:
+Or remove the complete AWS configuration directory:
 
 ```bash
 rm -rf ~/.aws
 ```
 
-## Terminate the EC2 Instance
+---
 
-After completing the practical, terminate the **Ayan Sayyad's EC2 instance** from the AWS Management Console if it is no longer required.
+## Step 11 — Finish the Practical
 
-> **Warning:** Make sure the EC2 instance is no longer needed before terminating it.
+After completing the practical, terminate the EC2 instance from the AWS Management Console if it is no longer required.
+
+> **Warning:** Make sure the EC2 instance and its data are no longer needed before terminating it.
