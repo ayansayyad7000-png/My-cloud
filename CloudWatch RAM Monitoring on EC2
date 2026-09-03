@@ -1,0 +1,158 @@
+# CloudWatch RAM Monitoring on EC2
+
+## 1. Create IAM Role
+
+Go to:
+
+**AWS Console → IAM → Roles → Create Role**
+
+Select:
+
+```text
+Trusted entity: AWS service
+Use case: EC2
+```
+
+Under permissions, attach:
+
+```text
+CloudWatchAgentServerPolicy
+```
+
+Create the role and attach it to the EC2 instance.
+
+> `CloudWatchAgentServerPolicy` is preferred over giving the EC2 instance `CloudWatchFullAccess`.
+
+---
+
+## 2. Install CloudWatch Agent
+
+Update the Ubuntu packages:
+
+```bash
+sudo apt update -y
+```
+
+Download the CloudWatch Agent:
+
+```bash
+wget https://amazoncloudwatch-agent.s3.amazonaws.com/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb
+```
+
+Install the agent:
+
+```bash
+sudo dpkg -i -E ./amazon-cloudwatch-agent.deb
+```
+
+---
+
+## 3. Configure RAM Monitoring
+
+Run the CloudWatch Agent configuration wizard:
+
+```bash
+sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-config-wizard
+```
+
+During the configuration, select the following options:
+
+```text
+Collect metrics: Yes
+
+Basic metrics:
+mem_used_percent
+
+CollectD: No
+StatsD: No
+```
+
+You can also select other memory metrics according to your requirements.
+
+The wizard will create a configuration file.
+
+---
+
+## 4. Start CloudWatch Agent
+
+If the configuration file is:
+
+```text
+/opt/aws/amazon-cloudwatch-agent/bin/config.json
+```
+
+Run:
+
+```bash
+sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
+-a fetch-config \
+-m ec2 \
+-s \
+-c file:/opt/aws/amazon-cloudwatch-agent/bin/config.json
+```
+
+---
+
+## 5. Check Agent Status
+
+```bash
+sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
+-a status \
+-m ec2
+```
+
+The status should show that the agent is running.
+
+---
+
+## 6. Generate RAM/CPU Load
+
+For testing, install the `stress` package:
+
+```bash
+sudo apt install stress -y
+```
+
+Generate CPU load:
+
+```bash
+stress --cpu 1
+```
+
+Stop the test with:
+
+```text
+Ctrl + C
+```
+
+---
+
+## 7. Check RAM Metrics in CloudWatch
+
+Go to:
+
+**AWS Console → CloudWatch → Metrics → All Metrics → CWAgent**
+
+Look for the EC2 instance and check:
+
+```text
+mem_used_percent
+```
+
+You can use this metric to monitor the memory/RAM utilization of your EC2 instance.
+
+---
+
+## Important
+
+Do not use the old:
+
+```bash
+CloudWatchMonitoringScripts-1.2.2.zip
+```
+
+script for a new setup.
+
+Do not give unnecessary `CloudWatchFullAccess` permissions to the EC2 instance.
+
+Do not upload AWS Access Keys, Secret Keys, passwords, or credential files to GitHub.
