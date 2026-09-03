@@ -1,21 +1,41 @@
 # AWS CloudWatch Agent Setup on EC2
 
-## 1. Create IAM Role
+## Simple Step-by-Step Guide
 
-Go to **AWS Console → IAM → Roles → Create Role**
+Follow these steps in order. Complete one step first, then move to the next step.
+
+---
+
+## Step 1 — Create an IAM Role
+
+Open:
+
+**AWS Console → IAM → Roles → Create Role**
 
 Select:
 
-* **Trusted entity:** AWS service
-* **Use case:** EC2
-* Attach permission:
-  `CloudWatchAgentServerPolicy`
+- **Trusted entity:** AWS service
+- **Use case:** EC2
+
+Attach this permission:
+
+```text
+CloudWatchAgentServerPolicy
+```
 
 Create the role and attach it to your EC2 instance.
 
 ---
 
-## 2. Update Ubuntu Packages
+## Step 2 — Connect to the EC2 Instance
+
+Connect to your Ubuntu EC2 instance using SSH or EC2 Instance Connect.
+
+---
+
+## Step 3 — Update Ubuntu Packages
+
+Run:
 
 ```bash
 sudo apt update -y
@@ -23,9 +43,9 @@ sudo apt update -y
 
 ---
 
-## 3. Download CloudWatch Agent
+## Step 4 — Download the CloudWatch Agent
 
-For Ubuntu 64-bit:
+For Ubuntu 64-bit, run:
 
 ```bash
 wget https://amazoncloudwatch-agent.s3.amazonaws.com/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb
@@ -33,7 +53,9 @@ wget https://amazoncloudwatch-agent.s3.amazonaws.com/ubuntu/amd64/latest/amazon-
 
 ---
 
-## 4. Install CloudWatch Agent
+## Step 5 — Install the CloudWatch Agent
+
+Run:
 
 ```bash
 sudo dpkg -i -E ./amazon-cloudwatch-agent.deb
@@ -41,30 +63,28 @@ sudo dpkg -i -E ./amazon-cloudwatch-agent.deb
 
 ---
 
-## 5. Configure CloudWatch Agent
+## Step 6 — Open the Configuration Wizard
 
-Run the configuration wizard:
+Run:
 
 ```bash
 sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-config-wizard
 ```
 
-During configuration, select the required options according to your monitoring requirements.
-
-For a basic EC2 practical:
+For a basic EC2 practical, you can select:
 
 ```text
 CollectD: No
 StatsD: No
 ```
 
-The wizard will create a configuration file.
+Complete the wizard. It will create a configuration file.
 
 ---
 
-## 6. Start CloudWatch Agent
+## Step 7 — Start the CloudWatch Agent
 
-If the configuration file is:
+If your configuration file is:
 
 ```text
 /opt/aws/amazon-cloudwatch-agent/bin/config.json
@@ -80,7 +100,11 @@ sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
 -c file:/opt/aws/amazon-cloudwatch-agent/bin/config.json
 ```
 
-Check the agent status:
+---
+
+## Step 8 — Check Agent Status
+
+Run:
 
 ```bash
 sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
@@ -88,17 +112,23 @@ sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
 -m ec2
 ```
 
+The agent should show that it is running.
+
 ---
 
-## 7. Generate CPU Stress
+## Step 9 — Install the Stress Tool
 
-Install the `stress` package:
+Run:
 
 ```bash
 sudo apt install stress -y
 ```
 
-Generate CPU load:
+---
+
+## Step 10 — Generate CPU Load
+
+Run:
 
 ```bash
 stress --cpu 1
@@ -112,16 +142,18 @@ Ctrl + C
 
 ---
 
-## 8. Check CloudWatch
+## Step 11 — Check Metrics in CloudWatch
 
-Go to:
+Open:
 
 **AWS Console → CloudWatch → Metrics → All metrics**
 
-Check the metrics collected from your EC2 instance.
+Select the metrics for your EC2 instance and check whether data is appearing.
+
+---
 
 ## Important
 
-Do not upload AWS credentials, access keys, secret keys, or other sensitive information to GitHub.
-
-The EC2 instance must have the required IAM role attached so the CloudWatch Agent can send metrics to CloudWatch.
+- Do not upload AWS Access Keys, Secret Keys or passwords to GitHub.
+- Attach the required IAM role to EC2 so the CloudWatch Agent can send metrics.
+- Stop stress testing after completing the monitoring test.
