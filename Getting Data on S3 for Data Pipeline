@@ -1,8 +1,14 @@
 # Getting Data on S3 for Data Pipeline
 
-## 1. Create IAM Role for S3 Access
+## Simple Step-by-Step Guide
 
-Go to:
+Follow these steps in order. Run the commands one by one and replace example names with your own bucket or file names where needed.
+
+---
+
+## Step 1 — Create an IAM Role for S3 Access
+
+Open:
 
 **AWS Console → IAM → Roles → Create Role**
 
@@ -13,59 +19,75 @@ Trusted entity: AWS service
 Use case: EC2
 ```
 
-Attach the required S3 permissions.
+Attach the required S3 permission.
 
-For a basic practical, you can use:
+For a basic college practical, you may use:
 
 ```text
 AmazonS3FullAccess
 ```
 
-For a real project, use a more restricted custom policy that allows access only to the required S3 bucket.
+For a real project, use a restricted custom policy that allows access only to the required bucket.
 
 Create the role.
 
 ---
 
-## 2. Launch an EC2 Instance
+## Step 2 — Launch an EC2 Instance
 
-Create an EC2 instance and select the IAM role created above.
-
----
-
-## 3. Connect to the EC2 Instance
-
-Connect to the EC2 instance using SSH or EC2 Instance Connect.
+Create an Ubuntu EC2 instance and attach the IAM role created in Step 1.
 
 ---
 
-## 4. Install AWS CLI v2
+## Step 3 — Connect to the EC2 Instance
 
-Update the packages:
+Connect using SSH or EC2 Instance Connect.
+
+---
+
+## Step 4 — Update Ubuntu
+
+Run:
 
 ```bash
 sudo apt update -y
 ```
 
-Install required packages:
+---
+
+## Step 5 — Install Required Packages
+
+Run:
 
 ```bash
 sudo apt install unzip curl -y
 ```
 
-Download AWS CLI v2:
+---
+
+## Step 6 — Download AWS CLI v2
+
+Run:
 
 ```bash
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
 ```
 
-Extract:
+---
+
+## Step 7 — Extract AWS CLI
+
+Run:
 
 ```bash
 unzip -q awscliv2.zip
 ```
 
-Install:
+---
+
+## Step 8 — Install AWS CLI
+
+Run:
 
 ```bash
 sudo ./aws/install
@@ -79,13 +101,13 @@ aws --version
 
 ---
 
-## 5. Create an S3 Bucket
+## Step 9 — Create an S3 Bucket
 
-Go to:
+Open:
 
 **AWS Console → S3 → Create bucket**
 
-Create a bucket with a unique name.
+Create a bucket with a globally unique name.
 
 Example:
 
@@ -93,21 +115,13 @@ Example:
 ayan-data-pipeline-2026
 ```
 
-> S3 bucket names must be globally unique.
-
-### Important
-
-Do **NOT** enable public write access.
-
-The EC2 instance should access S3 through its IAM role.
+> Do not enable public write access.
 
 ---
 
-## 6. Download Dataset
+## Step 10 — Download a Dataset to EC2
 
-For testing, download a dataset/file to the EC2 instance.
-
-Example:
+For testing, download a dataset/file from a trusted source:
 
 ```bash
 wget <DATASET_URL>
@@ -119,13 +133,11 @@ Check the downloaded file:
 ls -lh
 ```
 
-> Avoid using random/untrusted public download links for production pipelines. Use a trusted dataset source.
-
 ---
 
-## 7. Upload Dataset to S3
+## Step 11 — Upload a File to S3
 
-Suppose the downloaded file is:
+Suppose your file is:
 
 ```text
 /root/dataset.csv
@@ -137,7 +149,11 @@ Upload it:
 aws s3 cp /root/dataset.csv s3://ayan-data-pipeline-2026/
 ```
 
-For uploading a complete directory:
+---
+
+## Step 12 — Upload a Complete Folder to S3
+
+Run:
 
 ```bash
 aws s3 cp /root/data/ s3://ayan-data-pipeline-2026/data/ --recursive
@@ -145,29 +161,33 @@ aws s3 cp /root/data/ s3://ayan-data-pipeline-2026/data/ --recursive
 
 ---
 
-## 8. Verify the Data in S3
+## Step 13 — Verify the Uploaded Data
 
-List the bucket:
+List the bucket contents:
 
 ```bash
 aws s3 ls s3://ayan-data-pipeline-2026/
 ```
 
-You can also check the bucket from:
+You can also check:
 
 **AWS Console → S3 → Bucket → Objects**
 
 ---
 
-## 9. Download Data from S3
+## Step 14 — Download a File from S3 to EC2
 
-To download a file from S3:
+Run:
 
 ```bash
 aws s3 cp s3://ayan-data-pipeline-2026/dataset.csv /root/
 ```
 
-To download a complete folder:
+---
+
+## Step 15 — Download a Complete Folder from S3
+
+Run:
 
 ```bash
 aws s3 cp s3://ayan-data-pipeline-2026/data/ /root/data/ --recursive
@@ -175,7 +195,7 @@ aws s3 cp s3://ayan-data-pipeline-2026/data/ /root/data/ --recursive
 
 ---
 
-## Data Pipeline Flow
+## Simple Data Pipeline Flow
 
 ```text
 Dataset
@@ -189,9 +209,12 @@ Amazon S3
 Data Pipeline / Processing
 ```
 
-## Security Notes
+---
 
-* Do not make the S3 bucket publicly writable.
-* Do not upload AWS Access Keys or Secret Keys to GitHub.
-* Prefer IAM Roles for EC2 instead of storing credentials.
-* For production, follow the principle of least privilege.
+## Important
+
+- Do not make the S3 bucket publicly writable.
+- Do not upload AWS Access Keys or Secret Keys to GitHub.
+- Prefer IAM Roles for EC2 instead of storing credentials.
+- For real projects, follow the principle of least privilege.
+- Delete unused test data/resources after completing the practical if they are no longer required.
