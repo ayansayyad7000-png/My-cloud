@@ -1,0 +1,127 @@
+# AWS CloudWatch Agent Setup on EC2
+
+## 1. Create IAM Role
+
+Go to **AWS Console → IAM → Roles → Create Role**
+
+Select:
+
+* **Trusted entity:** AWS service
+* **Use case:** EC2
+* Attach permission:
+  `CloudWatchAgentServerPolicy`
+
+Create the role and attach it to your EC2 instance.
+
+---
+
+## 2. Update Ubuntu Packages
+
+```bash
+sudo apt update -y
+```
+
+---
+
+## 3. Download CloudWatch Agent
+
+For Ubuntu 64-bit:
+
+```bash
+wget https://amazoncloudwatch-agent.s3.amazonaws.com/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb
+```
+
+---
+
+## 4. Install CloudWatch Agent
+
+```bash
+sudo dpkg -i -E ./amazon-cloudwatch-agent.deb
+```
+
+---
+
+## 5. Configure CloudWatch Agent
+
+Run the configuration wizard:
+
+```bash
+sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-config-wizard
+```
+
+During configuration, select the required options according to your monitoring requirements.
+
+For a basic EC2 practical:
+
+```text
+CollectD: No
+StatsD: No
+```
+
+The wizard will create a configuration file.
+
+---
+
+## 6. Start CloudWatch Agent
+
+If the configuration file is:
+
+```text
+/opt/aws/amazon-cloudwatch-agent/bin/config.json
+```
+
+Run:
+
+```bash
+sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
+-a fetch-config \
+-m ec2 \
+-s \
+-c file:/opt/aws/amazon-cloudwatch-agent/bin/config.json
+```
+
+Check the agent status:
+
+```bash
+sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
+-a status \
+-m ec2
+```
+
+---
+
+## 7. Generate CPU Stress
+
+Install the `stress` package:
+
+```bash
+sudo apt install stress -y
+```
+
+Generate CPU load:
+
+```bash
+stress --cpu 1
+```
+
+Stop the stress test with:
+
+```text
+Ctrl + C
+```
+
+---
+
+## 8. Check CloudWatch
+
+Go to:
+
+**AWS Console → CloudWatch → Metrics → All metrics**
+
+Check the metrics collected from your EC2 instance.
+
+## Important
+
+Do not upload AWS credentials, access keys, secret keys, or other sensitive information to GitHub.
+
+The EC2 instance must have the required IAM role attached so the CloudWatch Agent can send metrics to CloudWatch.
