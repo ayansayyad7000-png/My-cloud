@@ -1,0 +1,151 @@
+# AWS CLI and System Stress Testing on Ubuntu 24.04
+
+## 1. Install AWS CLI on Ubuntu 24.04
+
+Update packages:
+
+```bash
+sudo apt update
+```
+
+Install required packages:
+
+```bash
+sudo apt install unzip curl -y
+```
+
+Download AWS CLI v2:
+
+```bash
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+```
+
+Extract the installer:
+
+```bash
+unzip -q awscliv2.zip
+```
+
+Install AWS CLI:
+
+```bash
+sudo ./aws/install
+```
+
+Check the installation:
+
+```bash
+aws --version
+```
+
+Check AWS CLI help:
+
+```bash
+aws help
+```
+
+---
+
+## 2. Stress Test for CPU Load
+
+Install the stress package:
+
+```bash
+sudo apt update
+sudo apt install stress -y
+```
+
+Generate CPU load using all available CPU cores:
+
+```bash
+stress --cpu $(nproc) --timeout 600
+```
+
+The command will generate CPU load for **600 seconds (10 minutes)**.
+
+---
+
+## 3. Continuous System Load Monitoring
+
+Install monitoring and stress-testing tools:
+
+```bash
+sudo apt update
+sudo apt install -y stress-ng sysstat iotop iftop
+```
+
+Check the `stress-ng` version:
+
+```bash
+stress-ng --version
+```
+
+Start continuous system load:
+
+```bash
+nohup stress-ng --cpu 0 --cpu-load 70 --vm 0 --vm-bytes 60% --io 2 --hdd 2 --hdd-bytes 1G --timeout 0 > /tmp/stress-ng.out 2>&1 & echo $! > /tmp/stress.pid
+```
+
+> `--timeout 0` means the stress test will continue until it is manually stopped.
+
+---
+
+## 4. Monitor System Resources
+
+Use `top` to monitor CPU and memory:
+
+```bash
+top
+```
+
+Other useful commands:
+
+```bash
+free -h
+```
+
+```bash
+iostat
+```
+
+```bash
+iotop
+```
+
+```bash
+iftop
+```
+
+---
+
+## 5. Stop the Continuous Stress Test
+
+The process ID is stored in:
+
+```bash
+cat /tmp/stress.pid
+```
+
+Stop the stress process:
+
+```bash
+kill $(cat /tmp/stress.pid)
+```
+
+If required, force stop:
+
+```bash
+kill -9 $(cat /tmp/stress.pid)
+```
+
+Verify that the stress process has stopped:
+
+```bash
+ps aux | grep stress-ng
+```
+
+## Important
+
+Do not leave continuous stress testing running unnecessarily because it consumes CPU, memory, disk I/O, and may increase EC2 usage/cost.
+
+For AWS monitoring practicals, start the stress test only when you need to observe CloudWatch metrics.
